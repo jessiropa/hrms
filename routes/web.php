@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 // use App\Models\Department;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('departments', DepartmentController::class);
+    Route::resource('employees', EmployeeController::class);
 });
 
 require __DIR__.'/auth.php';
