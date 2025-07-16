@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -53,24 +54,41 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Employee $employee)
     {
-        //
+        $departments = Department::all(); // Ini mengambil semua departemen dari database
+        // return view('employees.edit', compact('employee'));
+        return view('employees.edit', compact('employee', 'departments')); // 'departments' di sini adalah variabel yang kita ambil tadi.
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Employee $employee)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('employees')->ignore($employee->id),
+            ],
+            'position' => 'required|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+        ]);
+
+        $employee->update($validatedData);
+        return redirect()->route('employees.index')->with('success'. 'Data karyawan berhasil diperbaharui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return redirect()->route('employees.index')->with('success', 'Data berhasil dihapus'); 
     }
 }
