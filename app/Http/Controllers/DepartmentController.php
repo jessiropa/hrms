@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+// use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
@@ -55,6 +56,7 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         return view('departments.edit', compact('department'));
+
     }
 
     /**

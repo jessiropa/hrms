@@ -6,15 +6,57 @@ use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+// use Inertia\Inertia;
 
 class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::latest()->paginate(10);
+
+        // dd($request->all());
+
+        $query = Employee::with('department');
+
+        // $query = Employee::with('department'); // Selalu eager load department
+
+        // Logika pencarian
+        // if ($request->has('search') && $request->search != '') {
+        //     $search = $request->search;
+        //     $query->where('name', 'like', '%' . $search . '%')
+        //           ->orWhere('email', 'like', '%' . $search . '%')
+        //           ->orWhere('position', 'like', '%' . $search . '%')
+        //           // Mencari di nama departemen juga
+        //           ->orWhereHas('department', function ($q) use ($search) {
+        //                 $q->where('name', 'like', '%' . $search . '%');
+        //             });
+        // }
+         if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+
+            // Mengelompokkan kondisi OR untuk pencarian agar logika berjalan dengan benar
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('position', 'like', '%' . $search . '%')
+                  // Mencari di nama departemen juga menggunakan orWhereHas
+                  ->orWhereHas('department', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        // dd($query->toSql(), $query->getBindings());
+
+        // $employees = Employee::latest()->paginate(10);
+         $employees = $query->paginate(10);
+        // dd($employees->toArray());
+        
+        //  $employees = $query->get();
+
+        $employees->appends($request->query());
         return view('employees.index', compact('employees'));
     }
 
@@ -48,7 +90,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return view('employees.show', compact('employees'));
+        return view('employees.show', compact('employee'));
     }
 
     /**
@@ -80,7 +122,7 @@ class EmployeeController extends Controller
         ]);
 
         $employee->update($validatedData);
-        return redirect()->route('employees.index')->with('success'. 'Data karyawan berhasil diperbaharui');
+        return redirect()->route('employees.index')->with('success', 'Data karyawan berhasil diperbaharui');
     }
 
     /**
