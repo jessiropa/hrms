@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 // use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel; // <<< Tambahkan ini
+use App\Exports\EmployeesExport; 
 
 class EmployeeController extends Controller
 {
@@ -137,5 +139,9 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return redirect()->route('employees.index')->with('success', 'Data berhasil dihapus'); 
+    }
+
+    public function export(){
+        return Excel::download(new EmployeesExport, 'employees.xlsx');
     }
 }

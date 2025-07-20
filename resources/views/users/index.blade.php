@@ -13,11 +13,14 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-900">Daftar User</h3>
-                        <a href="{{ route('users.create') }}">
-                            <x-primary-button>
-                                {{ __('Tambah Pengguna') }}
-                            </x-primary-button>
-                        </a>
+                        {{-- <div class="flex space-x-2"> --}}
+                            
+                            <a href="{{ route('users.create') }}">
+                                <x-primary-button>
+                                    {{ __('Tambah Pengguna') }}
+                                </x-primary-button>
+                            </a>
+                        {{-- </div> --}}
                     </div>
                     
                     <div class="overflow-x-auto shadow-md sm:rounded-lg">

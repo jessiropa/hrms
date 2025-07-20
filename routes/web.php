@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('employees/export', [EmployeeController::class, 'export'])->name('employees.export')->middleware('can:manage-employees');
     Route::resource('departments', DepartmentController::class)->middleware('can:manage-employees');
     Route::resource('employees', EmployeeController::class)->middleware('can:manage-employees');
     Route::resource('users', UserController::class)->middleware('can:manage-users');
