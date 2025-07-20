@@ -7,9 +7,14 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 // use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
 
 class EmployeeController extends Controller
 {
+    // public function __construct(){
+    //     $this->middleware('can:manage-departments');
+    // }
+    /*
     /**
      * Display a listing of the resource.
      */

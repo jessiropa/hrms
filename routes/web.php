@@ -8,7 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Gate;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,22 +29,26 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
+require __DIR__.'/auth.php';
+
 Route::middleware('auth')->group(function () {
+    // Gate::authorize('view-dashboard'); 
+    
     Route::get('/dashboard', function(){
         $totalDepartments = Department::count();
         $totalEmployees = Employee::count();
         $totalUsers = User::count();
 
         return view('dashboard', compact('totalDepartments', 'totalEmployees', 'totalUsers'));
-    })->name('dashboard');
+    })->name('dashboard')->middleware('can:view-dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('departments', DepartmentController::class);
-    Route::resource('employees', EmployeeController::class);
-    Route::resource('users', UserController::class);
+    Route::resource('departments', DepartmentController::class)->middleware('can:manage-employees');
+    Route::resource('employees', EmployeeController::class)->middleware('can:manage-employees');
+    Route::resource('users', UserController::class)->middleware('can:manage-users');
 });
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';

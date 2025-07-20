@@ -20,13 +20,16 @@ class UserSeeder extends Seeder
                 'email' => 'admin@example.com',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
+                'role' => 'admin',
             ]);
             $this->command->info('Admin user created!');
         }else{
             $this->command->info('Admin user already exists.');
         }
 
-        User::factory()->count(50)->create();
+        User::factory()->count(50)->create([
+             'role' => 'employee', 
+        ]);
         $this->command->info('50 fake users created!');
     }
 }

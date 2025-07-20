@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use Illuminate\Http\Request;
 // use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
 
 class DepartmentController extends Controller
 {
+    // public function __construct(){
+    //     $this->middleware('can:manage-employees');
+    // }
+    /*
     /**
      * Display a listing of the resource.
      */

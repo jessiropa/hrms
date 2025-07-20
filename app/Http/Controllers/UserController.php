@@ -6,9 +6,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash; // Untuk hashing password
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
+    // public function __construct(){
+    //     // hanya admin saja yang mengelola user
+    //     $this->middleware('can:manage-users');
+    // }
     /**
      * Display a listing of the resource.
      */
