@@ -1,11 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Daftar Karyawan') }}
+            {{ __('Karyawan') }}
         </h2>
     </x-slot>
 
      @include('partials._flash_messages')
+     
+     
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -51,15 +53,20 @@
                             <tbody>
                                 @foreach ($employees as $employee)
                                 <tr class="bg-white border-b ">
-                                    {{-- <td class="px-6 py-4 font-medium">
-                                        {{ $employee->name }}
-                                    </td> --}}
 
-                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{-- <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <a href="{{ route('employees.show', $employee->id) }}" class="text-blue-600 hover:underline">
+                                            {{ dd($employee->name) }}
                                             {{ $employee->name }}
                                         </a>
-                                    </td>
+                                    </td> --}}
+
+                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
+                                            <a href="{{ route('employees.show', $employee->id) }}" class="text-blue-600 hover:underline">
+                                                {{ $employee->name }}
+                                            </a>
+                                            {{-- {{ $employee->name }} --}}
+                                        </td>
 
 
                                     <td class="px-6 py-4">
@@ -72,20 +79,6 @@
                                         {{-- {{ $employee->department_id ?? '-' }} --}}
                                         {{ $employee->department->name ?? 'Tidak Ada Departemen' }}
                                     </td>
-                                    {{-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div class="flex justify-end space-x-2">
-                                            <a href="{{ route('employees.edit', $employee->id) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">Edit</a>
-
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Hapus</button>
-                                                <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('Apakah Anda yakin ingin menghapus karyawan ini?')">
-                                                Hapus
-                                            </button>
-                                            </form>
-                                        </div>
-                                    </td> --}}
 
                                     <td class="px-6 py-4 text-right">
                                         <a href="{{ route('employees.edit', $employee->id) }}" class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline mr-4">Edit</a>

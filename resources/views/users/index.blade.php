@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Departemen') }}
+            {{ __('Pengguna') }}
         </h2>
     </x-slot>
 
@@ -12,10 +12,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Daftar Departemen</h3>
-                        <a href="{{ route('departments.create') }}">
+                        <h3 class="text-lg font-medium text-gray-900">Daftar User</h3>
+                        <a href="{{ route('users.create') }}">
                             <x-primary-button>
-                                {{ __('Tambah Departemen') }}
+                                {{ __('Tambah Pengguna') }}
                             </x-primary-button>
                         </a>
                     </div>
@@ -28,7 +28,7 @@
                                         Nama
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Deskripsi
+                                        Email
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-right">
                                         Aksi
@@ -36,24 +36,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($departments as $department)
+                                
+                                @foreach ($users as $user)
                                 <tr class="bg-white border-b ">
                                     <td class="px-6 py-4 font-medium">
-                                        {{ $department->name }}
+                                        <a href="{{ route('users.show', $user->id) }}" class="text-blue-600 hover:underline">
+                                                {{ $user->name }}
+                                            </a>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        {{ $department->description ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div class="flex justify-end space-x-2">
-                                            <a href="{{ route('departments.edit', $department->id) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">Edit</a>
 
-                                            <form action="{{ route('departments.destroy', $department->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Hapus</button>
-                                            </form>
-                                        </div>
+                                    <td class="px-6 py-4">
+                                        {{ $user->email ?? '-' }}
+                                    </td>
+
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('users.edit', $user->id) }}" class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline mr-4">Edit</a>
+                                        {{-- Form untuk tombol Hapus --}}
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                                Hapus
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -62,7 +67,7 @@
                     </div>
 
                     <div class="mt-4">
-                        {{ $departments->links() }}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>
