@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
@@ -39,7 +40,10 @@ Route::middleware('auth')->group(function () {
         $totalEmployees = Employee::count();
         $totalUsers = User::count();
 
-        return view('dashboard', compact('totalDepartments', 'totalEmployees', 'totalUsers'));
+        $employeesPerDepartment = Department::withCount('employees')->get();
+        // $employeesPerDepartment = Department::withCount('employees')->get();
+
+        return view('dashboard', compact('totalDepartments', 'totalEmployees', 'totalUsers', 'employeesPerDepartment'));
     })->name('dashboard')->middleware('can:view-dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -50,6 +54,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('departments', DepartmentController::class)->middleware('can:manage-employees');
     Route::resource('employees', EmployeeController::class)->middleware('can:manage-employees');
     Route::resource('users', UserController::class)->middleware('can:manage-users');
+
+    // my profile disini 
+    Route::prefix('my-profile')->name('my-profile.')->group(function() {
+        Route::get('/', [MyProfileController::class, 'show'])->name('show');
+        Route::get('/edit', [MyProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [MyProfileController::class, 'update'])->name('update');
+    });
+
 });
 
 // require __DIR__.'/auth.php';

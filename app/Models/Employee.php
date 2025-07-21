@@ -15,11 +15,16 @@ class Employee extends Model
         'email',
         'position',
         'department_id',
+        'user_id',
     ];
 
     // relasi tabel employe dan deparment yang dimana 1 karyawan memiliki 1 department
     public function department():BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

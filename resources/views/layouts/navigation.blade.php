@@ -16,6 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
                 @can('manage-departments')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
@@ -61,6 +62,13 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                        {{-- {{ dd(get_class(Auth::user())) }}  --}}
+
+                        @if(Auth::user()->employee)
+                            <x-dropdown-link :href="route('my-profile.show')">
+                                {{ __('Profil Karyawan Saya') }}
+                            </x-dropdown-link>
+                        @endif
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -93,6 +101,8 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            
             @can('manage-departments')
             <x-responsive-nav-link :href="route('departments.index')" :active="request()->routeIs('department.*')">
                 {{ __('Department') }}
@@ -121,6 +131,14 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+                
+
+               @if(Auth::user()->employee)
+                    <x-dropdown-link :href="route('my-profile.show')">
+                        {{ __('Profil Karyawan Saya') }}
+                    </x-dropdown-link>
+                @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
