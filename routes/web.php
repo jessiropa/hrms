@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MyProfileController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
@@ -60,6 +61,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [MyProfileController::class, 'show'])->name('show');
         Route::get('/edit', [MyProfileController::class, 'edit'])->name('edit');
         Route::put('/', [MyProfileController::class, 'update'])->name('update');
+    });
+
+    Route::prefix('attendances')->name('attendances.')->group(function () {
+        Route::get('/', [AttendanceController::class, 'index'])->name('index');
+        Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('check-in');
+        Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('check-out');
     });
 
 });

@@ -17,6 +17,19 @@
                     </x-nav-link>
                 </div>
 
+                {{-- Tautan Profil Karyawan Saya --}}
+                    @if(Auth::user()->employee)
+                        <x-nav-link :href="route('my-profile.show')" :active="request()->routeIs('my-profile.*')">
+                            {{ __('Profil Karyawan Saya') }}
+                        </x-nav-link>
+                    @endif
+
+                    {{-- <<< TAMBAHKAN TAUTAN KEHADIRAN INI >>> --}}
+                    <x-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
+                        {{ __('Kehadiran') }}
+                    </x-nav-link>
+                    {{-- <<< AKHIR TAMBAHAN >>> --}}
+
                 @can('manage-departments')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
@@ -132,13 +145,19 @@
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                
+                                
 
                @if(Auth::user()->employee)
                     <x-dropdown-link :href="route('my-profile.show')">
                         {{ __('Profil Karyawan Saya') }}
                     </x-dropdown-link>
                 @endif
+
+                {{-- <<< TAMBAHKAN TAUTAN KEHADIRAN INI (RESPONSIVE) >>> --}}
+                <x-responsive-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
+                    {{ __('Kehadiran') }}
+                </x-responsive-nav-link>
+                {{-- <<< AKHIR TAMBAHAN >>> --}}
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
