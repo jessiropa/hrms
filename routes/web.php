@@ -11,6 +11,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\LeaveRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,6 +68,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AttendanceController::class, 'index'])->name('index');
         Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('check-in');
         Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('check-out');
+    });
+
+    Route::prefix('leave-requests')->name('leave_requests.')->group(function () {
+        // Rute untuk Karyawan
+        Route::get('/create', [LeaveRequestController::class, 'create'])->name('create')->middleware('can:submit-leave-request');
+        Route::post('/', [LeaveRequestController::class, 'store'])->name('store')->middleware('can:submit-leave-request');
+        Route::get('/my-requests', [LeaveRequestController::class, 'myRequests'])->name('my-requests')->middleware('can:submit-leave-request');
+
+        // Rute untuk Admin/HR (Manajemen Permintaan Cuti)
+        Route::get('/', [LeaveRequestController::class, 'index'])->name('index')->middleware('can:manage-leave-requests');
+        Route::patch('/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('update-status')->middleware('can:manage-leave-requests');
     });
 
 });

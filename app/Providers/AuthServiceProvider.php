@@ -41,5 +41,13 @@ class AuthServiceProvider extends ServiceProvider
             // dd(Auth::user()->id, Auth::user()->email, Auth::user()->employee);
             return $user->role === 'admin' || $user->role === 'hr'|| $user->role === 'employee';
         });
+
+        Gate::define('submit-leave-request', function ($user) {
+            return $user->role === 'employee' || $user->role === 'admin'; // Admin juga bisa mengajukan cuti
+        });
+
+        Gate::define('manage-leave-requests', function ($user) {
+            return $user->role === 'admin' || $user->role === 'hr'; // Hanya admin dan HR yang bisa mengelola
+        });
     }
 }

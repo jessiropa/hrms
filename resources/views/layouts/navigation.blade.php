@@ -29,6 +29,17 @@
                         {{ __('Kehadiran') }}
                     </x-nav-link>
                     {{-- <<< AKHIR TAMBAHAN >>> --}}
+                    @can('submit-leave-request')
+                        <x-nav-link :href="route('leave_requests.my-requests')" :active="request()->routeIs('leave_requests.my-requests')">
+                            {{ __('Cuti Saya') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('manage-leave-requests')
+                        <x-nav-link :href="route('leave_requests.index')" :active="request()->routeIs('leave_requests.index')">
+                            {{ __('Manajemen Cuti') }}
+                        </x-nav-link>
+                    @endcan
 
                 @can('manage-departments')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -116,7 +127,7 @@
             </x-responsive-nav-link>
 
             
-            @can('manage-departments')
+            {{-- @can('manage-departments')
             <x-responsive-nav-link :href="route('departments.index')" :active="request()->routeIs('department.*')">
                 {{ __('Department') }}
             </x-responsive-nav-link>
@@ -130,7 +141,7 @@
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                 {{ __('Users') }}
             </x-responsive-nav-link>
-            @endcan
+            @endcan --}}
         </div>
 
         <!-- Responsive Settings Options -->
@@ -153,11 +164,23 @@
                     </x-dropdown-link>
                 @endif
 
-                {{-- <<< TAMBAHKAN TAUTAN KEHADIRAN INI (RESPONSIVE) >>> --}}
+                {{-- <<< TAMBAHKAN TAUTAN KEHADIRAN INI (RESPONSIVE) >>>
                 <x-responsive-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
                     {{ __('Kehadiran') }}
                 </x-responsive-nav-link>
                 {{-- <<< AKHIR TAMBAHAN >>> --}}
+
+            {{-- @can('submit-leave-request')
+            <x-responsive-nav-link :href="route('leave_requests.my-requests')" :active="request()->routeIs('leave_requests.my-requests')">
+                {{ __('Cuti Saya') }}
+            </x-responsive-nav-link>
+            @endcan --}}
+
+            {{-- @can('manage-leave-requests')
+                <x-responsive-nav-link :href="route('leave_requests.index')" :active="request()->routeIs('leave_requests.index')">
+                    {{ __('Manajemen Cuti') }}
+                </x-responsive-nav-link>
+            @endcan --}} 
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
