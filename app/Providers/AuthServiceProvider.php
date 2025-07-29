@@ -49,5 +49,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-leave-requests', function ($user) {
             return $user->role === 'admin' || $user->role === 'hr'; // Hanya admin dan HR yang bisa mengelola
         });
+
+        Gate::define('view-my-appraisals', function ($user) {
+             return $user->role === 'admin' || $user->role === 'hr'|| $user->role === 'employee';
+        });
+
+         Gate::define('create-appraisal', function ($user) {
+             return $user->role === 'admin' || $user->role === 'hr';
+        });
+
+        Gate::define('manage-appraisals', function ($user) {
+            return $user->role === 'admin' || $user->role === 'hr';
+        });
     }
 }

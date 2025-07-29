@@ -41,6 +41,12 @@
                         </x-nav-link>
                     @endcan
 
+                     @can('view-my-appraisals')
+                        <x-nav-link :href="route('performance_appraisals.my-appraisals')" :active="request()->routeIs('performance_appraisals.my-appraisals')">
+                            {{ __('Penilaian Kinerja') }}
+                        </x-nav-link>
+                    @endcan
+
                 @can('manage-departments')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
@@ -86,8 +92,6 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        {{-- {{ dd(get_class(Auth::user())) }}  --}}
-
                         @if(Auth::user()->employee)
                             <x-dropdown-link :href="route('my-profile.show')">
                                 {{ __('Profil Karyawan Saya') }}
@@ -126,22 +130,59 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            
-            {{-- @can('manage-departments')
-            <x-responsive-nav-link :href="route('departments.index')" :active="request()->routeIs('department.*')">
-                {{ __('Department') }}
+             @if(Auth::user()->employee)
+                <x-responsive-nav-link :href="route('my-profile.show')" :active="request()->routeIs('my-profile.*')">
+                    {{ __('Profil Karyawan Saya') }}
+                </x-responsive-nav-link>
+            @endif
+
+            {{-- Tautan Kehadiran (Responsive) --}}
+            <x-responsive-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
+                {{ __('Kehadiran') }}
             </x-responsive-nav-link>
+
+            {{-- Tautan Cuti Karyawan (Responsive) --}}
+            @can('submit-leave-request')
+                <x-responsive-nav-link :href="route('leave_requests.my-requests')" :active="request()->routeIs('leave_requests.my-requests')">
+                    {{ __('Cuti Saya') }}
+                </x-responsive-nav-link>
             @endcan
+
+            {{-- Tautan Manajemen Cuti (Responsive) --}}
+            @can('manage-leave-requests')
+                <x-responsive-nav-link :href="route('leave_requests.index')" :active="request()->routeIs('leave_requests.index')">
+                    {{ __('Manajemen Cuti') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            {{-- <<< TAUTAN BARU UNTUK PENILAIAN KINERJA (RESPONSIVE) >>> --}}
+            @can('view-my-appraisals')
+                <x-responsive-nav-link :href="route('performance_appraisals.my-appraisals')" :active="request()->routeIs('performance_appraisals.my-appraisals')">
+                    {{ __('Penilaian Kinerja') }}
+                </x-responsive-nav-link>
+            @endcan
+            {{-- <<< AKHIR TAUTAN BARU (RESPONSIVE) >>> --}}
+
+            {{-- Tautan Departemen (Responsive): Hanya bisa diakses jika user punya izin 'manage-departments' --}}
+            @can('manage-departments')
+                <x-responsive-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
+                    {{ __('Departemen') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            {{-- Tautan Karyawan (Responsive): Hanya bisa diakses jika user punya izin 'manage-employees' --}}
             @can('manage-employees')
-            <x-responsive-nav-link :href="route('employees.index')" :active="request()->routeIs('employees.*')">
-                {{ __('Karyawan') }}
-            </x-responsive-nav-link>
-            @endcan 
+                <x-responsive-nav-link :href="route('employees.index')" :active="request()->routeIs('employees.*')">
+                    {{ __('Karyawan') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            {{-- Tautan Users (Responsive): Hanya bisa diakses jika user punya izin 'manage-users' --}}
             @can('manage-users')
-            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                {{ __('Users') }}
-            </x-responsive-nav-link>
-            @endcan --}}
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
@@ -164,23 +205,6 @@
                     </x-dropdown-link>
                 @endif
 
-                {{-- <<< TAMBAHKAN TAUTAN KEHADIRAN INI (RESPONSIVE) >>>
-                <x-responsive-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
-                    {{ __('Kehadiran') }}
-                </x-responsive-nav-link>
-                {{-- <<< AKHIR TAMBAHAN >>> --}}
-
-            {{-- @can('submit-leave-request')
-            <x-responsive-nav-link :href="route('leave_requests.my-requests')" :active="request()->routeIs('leave_requests.my-requests')">
-                {{ __('Cuti Saya') }}
-            </x-responsive-nav-link>
-            @endcan --}}
-
-            {{-- @can('manage-leave-requests')
-                <x-responsive-nav-link :href="route('leave_requests.index')" :active="request()->routeIs('leave_requests.index')">
-                    {{ __('Manajemen Cuti') }}
-                </x-responsive-nav-link>
-            @endcan --}} 
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

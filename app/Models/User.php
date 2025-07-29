@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LeaveRequest::class);
     }
+
+    public function reviewedAppraisals(): HasMany
+    {
+        return $this->hasMany(PerformanceAppraisal::class, 'reviewer_id');
+    }
 }

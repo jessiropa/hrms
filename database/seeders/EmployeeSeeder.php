@@ -16,102 +16,116 @@ class EmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-        // $departmentKeuangan = Department::where('name', 'Keuangan')->first();
-        // $departmentSDM = Department::where('name', 'SDM')->first();
-        // $departmentIT = Department::where('name', 'IT')->first();
 
-        // if($departmentIT && $departmentSDM && $departmentKeuangan){
-        //     Employee::create([
-        //         'name' => 'Andi Wijaya',
-        //         'email' => 'wijaya@contoh.com',
-        //         'position' => 'Manager Keuangan',
-        //         'department_id' => $departmentKeuangan->id,
-        //     ]);
-
-        //     Employee::create([
-        //         'name' => 'Budiman',
-        //         'email' => 'manbudi@contoh.com',
-        //         'position' => 'Staff SDM',
-        //         'department_id' => $departmentSDM->id,
-        //     ]);
-
-        //     Employee::create([
-        //         'name' => 'Tutik Dewi',
-        //         'email' => 'tikdewi@contoh.com',
-        //         'position' => 'Web Developer',
-        //         'department_id' => $departmentIT->id,
-        //     ]);
-        // }else{
-        //     echo 'Peringatan : Department yang dibutuhkan untuk EmployeeSeeder tidak ditemukan. Pastikan DepartmentSeender sudah dijalankan terlebih dahulu.\n';
+        // // pastikan ada department yang tersedia
+        // if(Department::count() === 0){
+        //     $this->call(DepartmentSeeder::class);
         // }
 
-        // $faker = Faker::create('id_ID');
-        // $deparmentIds = Department::pluck('id')->toArray();
+        // // Dapatkan semua user yang ada
+        // $users = User::all();
+        // $departments = Department::all();
 
-        // if(empty($deparmentIds)){
-        //     echo 'Peringatan: Tidak ada department ditemukan. Jalankan DepartmentSeeder terlebih dahulu. \n';
-        //     return;
+        //  $adminUser = User::where('email', 'admin@example.com')->first();
+        // if ($adminUser && $adminUser->employee === null) {
+        //     Employee::create([ // Gunakan create() langsung karena ini spesifik
+        //         'name' => $adminUser->name,
+        //         'email' => $adminUser->email,
+        //         'position' => 'Administrator', // Posisi default untuk admin
+        //         'department_id' => $departments->random()->id, // Pilih departemen acak
+        //         'user_id' => $adminUser->id,
+        //     ]);
+        //     $this->command->info('Admin user linked to an employee record.');
+        // } else {
+        //     $this->command->info('Admin user already has an employee record or does not exist.');
         // }
 
-        // for($i = 0; $i < 50; $i++){
-        //     Employee::create([
-        //         'name' => $faker->name,
-        //         'email' => $faker->unique()->safeEmail,
-        //         'position' => $faker->jobTitle,
-        //         'department_id' => $faker->randomElement($deparmentIds),
-        //     ]);
-        // }
+        //         // memuat 10 karyawan dummy
+        // Employee::factory()->count(10)->create([
+        //     'department_id' => function () use ($departments){
+        //         return $departments->random()->id;
+        //     },
+        //     'user_id' => function() use ($users){
+        //         // menghubungkan karyawan dengan user 
+        //         $availableUsers = $users->filter(function ($user){
+        //             return $user->employee === null; // khusus user yang belum punya employee record
+        //         });
 
+        //         if($availableUsers->isNotEmpty()){
+        //             return $availableUsers->random()->id;
+        //         }
 
-        //     Employee::create([
-        //         'name' => 'Tutik Dewi',
-        //         'email' => 'tikdewi@contoh.com',
-        //         'position' => 'Web Developer',
-        //         'department_id' => $faker->randomElement($deparmentIds),
-        //     ]);
+        //         return null;
+        //     },
+        // ]);
 
-        // pastikan ada department yang tersedia
-        if(Department::count() === 0){
-            $this->call(DepartmentSeeder::class);
+        // $this->command->info('Employees seeded successfully');
+
+        // Pastikan ada departemen yang tersedia
+        if (Department::count() === 0) {
+            $this->call(DepartmentSeeder::class); // Panggil DepartmentSeeder jika belum ada departemen
         }
+        $departments = Department::all(); // Ambil semua departemen
 
-        // Dapatkan semua user yang ada
-        $users = User::all();
-        $departments = Department::all();
+        // Dapatkan user yang belum punya employee record
+        // Ini akan mengambil user yang belum ditautkan ke employee manapun
+        $usersWithoutEmployee = User::doesntHave('employee')->get();
+        // Acak koleksi user yang tersedia agar penautan lebih bervariasi
+        $usersForEmployees = $usersWithoutEmployee->shuffle();
 
-         $adminUser = User::where('email', 'admin@example.com')->first();
+        // --- Buat/Tautkan Employee untuk Admin User ---
+        $adminUser = User::where('email', 'admin@example.com')->first();
         if ($adminUser && $adminUser->employee === null) {
-            Employee::create([ // Gunakan create() langsung karena ini spesifik
-                'name' => $adminUser->name,
+            Employee::create([
+                'name' => $adminUser->name, // Ambil nama dari user
                 'email' => $adminUser->email,
-                'position' => 'Administrator', // Posisi default untuk admin
-                'department_id' => $departments->random()->id, // Pilih departemen acak
                 'user_id' => $adminUser->id,
+                'position' => 'Administrator',
+                'department_id' => $departments->random()->id,
+                // 'employee_id' => 'ADM-' . str_pad($adminUser->id, 3, '0', STR_PAD_LEFT),
             ]);
             $this->command->info('Admin user linked to an employee record.');
         } else {
             $this->command->info('Admin user already has an employee record or does not exist.');
         }
 
-                // memuat 10 karyawan dummy
-        Employee::factory()->count(10)->create([
-            'department_id' => function () use ($departments){
+        // --- Buat/Tautkan Employee untuk User dengan Role 'employee' (atau user lain yang belum ditautkan) ---
+        // Kita akan menautkan user yang memiliki role 'employee' ke employee record
+        // Atau user lain yang belum memiliki employee record (dari User::factory() di UserSeeder)
+        $employeeUsers = User::where('role', 'employee')->doesntHave('employee')->get();
+        $otherAvailableUsers = User::doesntHave('employee')->whereNotIn('role', ['admin', 'hr', 'employee'])->get();
+
+        $usersToLink = $employeeUsers->merge($otherAvailableUsers)->shuffle();
+
+        $countLinkedEmployees = 0;
+        foreach ($usersToLink as $user) {
+            // Pastikan user belum punya employee record
+            if ($user->employee === null) {
+                Employee::create([
+                    'user_id' => $user->id,
+                    'department_id' => $departments->random()->id,
+                    // 'employee_id' => 'EMP-' . str_pad($user->id, 3, '0', STR_PAD_LEFT), // ID Karyawan unik
+                    'name' => $user->name, // Ambil nama dari user
+                    'email' => $user->email,
+                    'position' => 'Staff',
+                ]);
+                $countLinkedEmployees++;
+            }
+        }
+        $this->command->info($countLinkedEmployees . ' employee records linked to users.');
+
+        // --- Buat beberapa Employee tanpa User ID (opsional, untuk data historis/belum punya akun) ---
+        // Jika Anda masih ingin beberapa karyawan yang tidak bisa login
+        $employeesWithoutUser = 3; // Jumlah karyawan tanpa user ID
+        Employee::factory()->count($employeesWithoutUser)->create([
+            'user_id' => null, // Pastikan user_id null
+            'department_id' => function () use ($departments) {
                 return $departments->random()->id;
             },
-            'user_id' => function() use ($users){
-                // menghubungkan karyawan dengan user 
-                $availableUsers = $users->filter(function ($user){
-                    return $user->employee === null; // khusus user yang belum punya employee record
-                });
-
-                if($availableUsers->isNotEmpty()){
-                    return $availableUsers->random()->id;
-                }
-
-                return null;
-            },
         ]);
+        $this->command->info($employeesWithoutUser . ' employees without user accounts created.');
 
-        $this->command->info('Employees seeded successfully');
+        $this->command->info('Employee seeding completed.');
     }
+    // }
 }
