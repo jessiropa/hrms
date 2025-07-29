@@ -107,6 +107,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('payrolls')->name('payrolls.')->group(function(){
         Route::get('/my-payrolls', [PayrollController::class, 'myPayrolls'])->name('my-payrolls')->middleware('can:view-my-payrolls');
         
+        Route::get('/', [PayrollController::class, 'index'])->name('index')->middleware('can:manage-payrolls');
+        Route::get('/create', [PayrollController::class, 'create'])->name('create')->middleware('can:manage-payrolls');
+        Route::post('/', [PayrollController::class, 'store'])->name('store')->middleware('can:manage-payrolls');
+        Route::get('/{payroll}', [PayrollController::class, 'show'])->name('show');
+        Route::get('/{payroll}', [PayrollController::class, 'edit'])->name('edt')->middleware('can:manage-payrolls');
+        Route::put('/{payroll}', [PayrollController::class, 'update'])->name('update')->middleware('can:manage-payrolls');
+        Route::delete('/{payroll}', [PayrollController::class, 'destroy'])->name('destroy')->middleware('can:manage-payrolls');
     });
 
 });

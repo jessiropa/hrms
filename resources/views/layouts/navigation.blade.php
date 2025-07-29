@@ -53,6 +53,12 @@
                         </x-nav-link>
                     @endcan
 
+                    @can('manage-payrolls')
+                        <x-nav-link :href="route('payrolls.index')" :active="request()->routeIs('payrolls.index')">
+                            {{ __('Manajemen Penggajian') }}
+                        </x-nav-link>
+                    @endcan
+
                 @can('manage-departments')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
@@ -172,6 +178,12 @@
             @can('view-my-payrolls')
                 <x-nav-link :href="route('payrolls.my-payrolls')" :active="request()->routeIs('payrolls.my-payrolls')">
                     {{ __('Slip Gaji') }}
+                </x-nav-link>
+            @endcan
+
+            @can('manage-payrolls')
+                <x-nav-link :href="route('payrolls.index')" :active="request()->routeIs('payrolls.index')">
+                    {{ __('Manajemen Penggajian') }}
                 </x-nav-link>
             @endcan
 
