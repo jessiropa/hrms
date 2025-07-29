@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceAppraisalController;
 use App\Models\PerformanceAppraisal;
 
@@ -100,6 +101,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PerformanceAppraisalController::class, 'index'])->name('index')->middleware('can:manage-appraisals');
         Route::get('/{performanceAppraisal}/edit', [PerformanceAppraisalController::class, 'edit'])->name('edit')->middleware('can:manage-appraisals');
         Route::put('/{performanceAppraisal}', [PerformanceAppraisalController::class, 'update'])->name('update')->middleware('can:manage-appraisals');
+    });
+
+    // Rute Penggajian 
+    Route::prefix('payrolls')->name('payrolls.')->group(function(){
+        Route::get('/my-payrolls', [PayrollController::class, 'myPayrolls'])->name('my-payrolls')->middleware('can:view-my-payrolls');
+        
     });
 
 });

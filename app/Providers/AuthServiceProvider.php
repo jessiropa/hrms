@@ -61,5 +61,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-appraisals', function ($user) {
             return $user->role === 'admin' || $user->role === 'hr';
         });
+
+        Gate::define('view-my-payrolls', function($user){
+            return $user->role === 'employee' || $user->role === 'admin' || $user->role ==='hr';
+        });
     }
 }
