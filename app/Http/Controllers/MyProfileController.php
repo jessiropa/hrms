@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -52,7 +53,7 @@ class MyProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
         $user = Auth::user();
         
@@ -69,7 +70,7 @@ class MyProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
         $user = Auth::user();
 
@@ -91,6 +92,11 @@ class MyProfileController extends Controller
             ],
             'position' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
+        ]);
+
+        $user->update([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email']
         ]);
 
         $employee->update($validatedData);

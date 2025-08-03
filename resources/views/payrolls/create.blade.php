@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Buat Slip Gaji Baru') }}
@@ -21,7 +21,7 @@
                                 <option value="">Pilih Karyawan</option>
                                 @foreach ($employees as $employee)
                                     <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                        {{ $employee->name }} ({{ $employee->employee_id }})
+                                        {{ $employee->name }} ({{ $employee->id }})
                                     </option>
                                 @endforeach
                             </select>
@@ -94,4 +94,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

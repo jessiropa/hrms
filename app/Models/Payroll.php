@@ -26,9 +26,9 @@ class Payroll extends Model
         'pay_period_start' => 'date',
         'pay_period_end' => 'date',
         'base_salary' => 'decimal:2',
-        'allowances' => 'dacimal:2',
-        'deductions' => 'dacimal:2',
-        'net_salary' => 'dacimal:2',
+        'allowances' => 'decimal:2',
+        'deductions' => 'decimal:2',
+        'net_salary' => 'decimal:2',
     ];
 
     public function employee(): BelongsTo

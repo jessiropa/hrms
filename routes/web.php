@@ -103,18 +103,33 @@ Route::middleware('auth')->group(function () {
         Route::put('/{performanceAppraisal}', [PerformanceAppraisalController::class, 'update'])->name('update')->middleware('can:manage-appraisals');
     });
 
-    // Rute Penggajian 
-    Route::prefix('payrolls')->name('payrolls.')->group(function(){
-        Route::get('/my-payrolls', [PayrollController::class, 'myPayrolls'])->name('my-payrolls')->middleware('can:view-my-payrolls');
-        
-        Route::get('/', [PayrollController::class, 'index'])->name('index')->middleware('can:manage-payrolls');
-        Route::get('/create', [PayrollController::class, 'create'])->name('create')->middleware('can:manage-payrolls');
-        Route::post('/', [PayrollController::class, 'store'])->name('store')->middleware('can:manage-payrolls');
-        Route::get('/{payroll}', [PayrollController::class, 'show'])->name('show');
-        Route::get('/{payroll}', [PayrollController::class, 'edit'])->name('edt')->middleware('can:manage-payrolls');
-        Route::put('/{payroll}', [PayrollController::class, 'update'])->name('update')->middleware('can:manage-payrolls');
-        Route::delete('/{payroll}', [PayrollController::class, 'destroy'])->name('destroy')->middleware('can:manage-payrolls');
-    });
+    // Rute Penggajian menggunakan Route::prefix
+Route::prefix('payrolls')->name('payrolls.')->group(function(){
+    Route::get('/my-payrolls', [PayrollController::class, 'myPayrolls'])->name('my-payrolls')->middleware('can:view-my-payrolls');
+    // Rute untuk melihat daftar semua penggajian
+    Route::get('/', [PayrollController::class, 'index'])->name('index')->middleware('can:manage-payrolls');
+    
+    // Rute untuk menampilkan formulir pembuatan penggajian baru
+    Route::get('/create', [PayrollController::class, 'create'])->name('create')->middleware('can:manage-payrolls');
+    
+    // Rute untuk menyimpan data penggajian yang baru dibuat
+    Route::post('/', [PayrollController::class, 'store'])->name('store')->middleware('can:manage-payrolls');
+    
+    // Rute untuk melihat detail satu penggajian spesifik
+    Route::get('/{payroll}', [PayrollController::class, 'show'])->name('show');
+    
+    // Rute untuk menampilkan formulir edit penggajian
+    Route::get('/{payroll}/edit', [PayrollController::class, 'edit'])->name('edit')->middleware('can:manage-payrolls');
+    
+    // Rute untuk menyimpan perubahan dari formulir edit
+    Route::put('/{payroll}', [PayrollController::class, 'update'])->name('update')->middleware('can:manage-payrolls');
+    
+    // Rute untuk menghapus penggajian
+    Route::delete('/{payroll}', [PayrollController::class, 'destroy'])->name('destroy')->middleware('can:manage-payrolls');
+
+    // Rute kustom untuk daftar gaji karyawan yang login
+    Route::get('/my-payrolls', [PayrollController::class, 'myPayrolls'])->name('my-payrolls')->middleware('can:view-my-payrolls');
+});
 
 });
 
